@@ -1,5 +1,7 @@
 venv
 .venv
-instructions
-problems
+__pycache__/
+*.pyc
+
+
 
