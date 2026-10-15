@@ -1,0 +1,11 @@
+# Workspace Context
+### Reference Material & Guidelines
+Below is your toolkit. These assets contain the core blueprints, guidelines, rules, or formulas you need to follow. Each item is wrapped inside an <asset> tag that maps its original file name to its contents or visual stream index numbers.
+{instruction_assets}
+
+### Active Problem Set
+Below is the specific assignment, task, or question you need to figure out. Use the reference toolkit assets provided above to break it down.
+{problem_assets}
+
+# Execution Command
+Review all assets carefully, sync your visual streams with the provided index markers, map out your logic step-by-step, and output your final solution as pure JSON matching the required schema.

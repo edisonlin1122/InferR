@@ -9,8 +9,12 @@ You must respond strictly as a valid JSON object. Do not include markdown code b
 
 {
   "problem_summary": "A concise summary of the core question or problem needing to be solved.",
-  "solution_pathway": "Step-by-step breakdown of the logic, mathematical formulas, derivations, or strategy required to solve it.",
-  "evidence": "References or citations pointing to the relevant parts of the input assets (e.g., page numbers, text segments, or image details used).",
+  "solution_pathway": [
+    "Sequential logical steps, calculations, derivations, or strategy required to reach the conclusion."
+  ],
+  "evidence": [
+    "Granular tracking citations mapping back strictly to the absolute file path, page numbers, text segments, or visual indices used."
+  ],
   "confidence_score": 95,
   "final_answer": "The final computed answer, conclusion, or option choice."
 }
@@ -19,3 +23,17 @@ You must respond strictly as a valid JSON object. Do not include markdown code b
 1. Clarity: Write explanations so a complete beginner can follow every single logical step.
 2. Strict JSON Only: Return valid JSON matching the keys above. The confidence_score must be an integer out of 100.
 3. Visual & Source Grounding: Base all steps on the provided instruction files and problem assets.
+4. Tracing: Your "evidence" list field MUST cite the complete, full absolute asset 'path' attribute exactly as written in the workspace context tag. Never truncate, shorten, or use relative filenames.
+5. Dynamic Scaling: The "solution_pathway" and "evidence" arrays are not limited in length. Dynamically scale the number of list elements to match the depth and step count required by the complexity of the problem.
+
+# Workspace Context
+### Reference Material & Guidelines
+Below is your toolkit. These files contain the core blueprints, guidelines, rules, or formulas you need to follow. Each document is wrapped inside an <asset> tag that shows its absolute filesystem path.
+{instruction_text}
+
+### Active Problem Set
+Below is the specific assignment, task, or question you need to figure out using the reference materials provided above. Each document is wrapped inside an <asset> tag that shows its absolute filesystem path.
+{problem_text}
+
+# Execution Command
+Review all materials carefully, map out your logic step-by-step, and output your final solution as pure JSON matching the required schema.
