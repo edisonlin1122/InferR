@@ -1,12 +1,12 @@
-import fitz  # PyMuPDF
+"""
+File: parser.py
+
+Purpose: Converts different file types  text/images/PDFs into clean text blocks or standard images that the model can read & process.
+"""
+
+import pymupdf as fitz
 from pathlib import Path
-from src.config import (
-    PROBLEMS_RAW,
-    PROBLEMS_PARSED,
-    INSTRUCTIONS_RAW,
-    INSTRUCTIONS_PARSED,
-    DEFAULT_DPI,
-)
+from src.config import DEFAULT_DPI
 
 SUPPORTED_EXTENSIONS = {
     "text": {".txt", ".md"},
@@ -14,34 +14,22 @@ SUPPORTED_EXTENSIONS = {
     "image": {".png", ".jpg", ".jpeg", ".webp"}
 }
 
-def init_directories():
-
-    directories = [
-        PROBLEMS_RAW,
-        PROBLEMS_PARSED,
-        INSTRUCTIONS_RAW,
-        INSTRUCTIONS_PARSED,
-    ]
-
-    for directory in directories:
-        directory.mkdir(parents=True, exist_ok=True)
-
-
+# Decides parsing should process the extension
 def get_file_type(file_path: Path) -> str:
     ext = file_path.suffix.lower()
     for file_type, extensions in SUPPORTED_EXTENSIONS.items():
         if ext in extensions:
             return file_type
 
-
+# Extracts the string text
 def _parse_text(file_path: Path) -> dict:
     return {"type": "text", "content": file_path.read_text(encoding="utf-8").strip()}
 
-
+# Map a single absolute image asset file path directly to vector
 def _parse_image(file_path: Path) -> dict:
     return {"type": "image", "content": str(file_path)}
 
-
+# Turns PDF into multiple imgs, one per page
 def _parse_pdf(file_path: Path, output_dir: Path, dpi: int) -> dict:
     target_folder = output_dir / file_path.stem
     target_folder.mkdir(parents=True, exist_ok=True)
@@ -59,11 +47,8 @@ def _parse_pdf(file_path: Path, output_dir: Path, dpi: int) -> dict:
 
     return {"type": "pdf_images", "content": rendered_pages}
 
-
+# Runs the parsing based on file type
 def parse_file(file_path: Path, output_dir: Path, dpi: int = DEFAULT_DPI) -> dict:
-
-    init_directories()
-    
     file_path = Path(file_path)
     file_type = get_file_type(file_path)
 
@@ -73,5 +58,4 @@ def parse_file(file_path: Path, output_dir: Path, dpi: int = DEFAULT_DPI) -> dic
         return _parse_image(file_path)
     elif file_type == "pdf":
         return _parse_pdf(file_path, output_dir, dpi)
-        
     raise ValueError(f"Unsupported file type: {file_type}")
